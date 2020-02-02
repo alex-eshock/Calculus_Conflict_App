@@ -15,9 +15,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
+
 public class AsteroidsApp extends Application {
 
     private Pane root;
