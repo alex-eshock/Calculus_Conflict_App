@@ -10,6 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -41,7 +44,9 @@ public class AsteroidsApp extends Application {
 
         root = new Pane();
         root.setPrefSize(1720, 880);
-
+        BackgroundImage bg = new BackgroundImage(images[1], null, null, null, null);
+        Background background = new Background(bg);
+        root.setBackground(background);
 
 
         //player now requires a sprite
@@ -109,9 +114,11 @@ public class AsteroidsApp extends Application {
         if(currState.rightStickMagnitude > 0.25) {
 
 
-            if(bulletTimer % 10 == 0 ) {
-                Bullet bullet = new Bullet();
+            if(bulletTimer % 20 == 0 ) {
+                Bullet bullet = new Bullet(new ImageView(images[2]));
+                bullet.setRotate(90 - currState.rightStickAngle);
                 addBullet(bullet, player.getView().getTranslateX() + 15, player.getView().getTranslateY() + 5);
+
                 bullet.setVelocity((new Point2D(currState.rightStickX, currState.rightStickY - 2*(currState.rightStickY))).normalize().multiply(10));
 
             }
@@ -123,10 +130,10 @@ public class AsteroidsApp extends Application {
         player.update();
 
         if (Math.random() < 0.02) {
-            addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+            addEnemy(new Enemy(new ImageView(images[3])), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
 
-        if (bulletTimer >= 60) {
+        if (bulletTimer >= 120) {
             bulletTimer = 0;
         }
 
@@ -149,7 +156,7 @@ public class AsteroidsApp extends Application {
             } else if (e.getCode() == KeyCode.RIGHT) {
                 player.rotateRight();
             } else if (e.getCode() == KeyCode.SPACE) {
-                Bullet bullet = new Bullet();
+                Bullet bullet = new Bullet(new ImageView(images[2]));
                 bullet.setVelocity(player.getVelocity().normalize().multiply(5));
                 addBullet(bullet, player.getView().getTranslateX(), player.getView().getTranslateY());
             }
@@ -159,8 +166,10 @@ public class AsteroidsApp extends Application {
 
     public static void main(String[] args) {
         images = new Image[10];
-        images[0] = new Image("Calculus Conflict Art Assets/ship.png");
-
+        images[0] = new Image("Calculus Conflict Art Assets/resized/Ship.png");
+        images[1] = new Image("Calculus Conflict Art Assets/Calculus Conflict Background.jpg");
+        images[2] = new Image("Calculus Conflict Art Assets/Resized/Bullet.png");
+        images[3] = new Image("Calculus Conflict Art Assets/Resized/NormalEnemy.png");
         launch(args);
     }
 }
