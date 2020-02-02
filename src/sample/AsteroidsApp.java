@@ -7,6 +7,8 @@ import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -29,6 +31,7 @@ public class AsteroidsApp extends Application {
     private int frameCount = 0;
     private int bulletTimer = 0;
 
+    private static Image images[];
 
     private Parent createContent() {
         controllers = new ControllerManager();
@@ -43,7 +46,7 @@ public class AsteroidsApp extends Application {
 
         //player now requires a sprite
         //all things will need sprite
-        //player = new Player();
+        player = new Player(new ImageView(images[0]));
         player.setVelocity(new Point2D(1, 0));
         addGameObject(player, root.getPrefWidth()/2, root.getPrefHeight()/2);
 
@@ -155,6 +158,9 @@ public class AsteroidsApp extends Application {
     }
 
     public static void main(String[] args) {
+        images = new Image[10];
+        images[0] = new Image("Calculus Conflict Art Assets/ship.png");
+
         launch(args);
     }
 }
