@@ -58,6 +58,10 @@ public class GameObject {
         setVelocity(new Point2D(Math.cos(Math.toRadians(getRotate())), Math.sin(Math.toRadians(getRotate()))));
     }
 
+    public void setRotate(double value) {
+        view.setRotate(value);
+    }
+
     public boolean isColliding(GameObject other) {
         return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
     }

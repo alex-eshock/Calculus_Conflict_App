@@ -1,5 +1,7 @@
 package sample;
 
+import com.studiohartman.jamepad.ControllerManager;
+import com.studiohartman.jamepad.ControllerState;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
@@ -15,7 +17,6 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class AsteroidsApp extends Application {
 
     private Pane root;
@@ -24,8 +25,17 @@ public class AsteroidsApp extends Application {
     private List<GameObject> enemies = new ArrayList<>();
 
     private GameObject player;
+    ControllerManager controllers;
+    private int frameCount = 0;
+    private int bulletTimer = 0;
+
 
     private Parent createContent() {
+        controllers = new ControllerManager();
+        controllers.initSDLGamepad();
+
+
+
         root = new Pane();
         root.setPrefSize(600, 600);
 
@@ -78,33 +88,56 @@ public class AsteroidsApp extends Application {
         bullets.forEach(GameObject::update);
         enemies.forEach(GameObject::update);
 
+
+        //asdfasdfasdfasdfasdfasdf
+        ControllerState currState = controllers.getState(0);
+        if(currState.leftStickMagnitude > 0.25 || currState.leftStickMagnitude < -0.25)  {
+            player.setVelocity(player.getVelocity().add(new Point2D(5*currState.leftStickX,5*(currState.leftStickY - (2* currState.leftStickY)))).multiply(.5));
+
+        } else {
+            player.setVelocity(player.getVelocity().add(new Point2D(0,0)).multiply(.5));
+            //letting go of stick, do momentum calculatio
+        }
+
+        if(currState.rightStickMagnitude > 0.25) {
+            player.setRotate(180 -currState.rightStickAngle);
+
+            if(bulletTimer == 0 || bulletTimer == 5 || bulletTimer == 10 || bulletTimer == 30 || bulletTimer == 35 || bulletTimer == 40) {
+                Bullet bullet = new Bullet();
+                addBullet(bullet, player.getView().getTranslateX() + 15, player.getView().getTranslateY() + 5);
+                bullet.setVelocity((new Point2D(currState.rightStickX, currState.rightStickY - 2*(currState.rightStickY))).normalize().multiply(8));
+
+            }
+            bulletTimer++;
+        } else {
+            bulletTimer = 0;
+        }
+        //END CONTYROLLERSDF:SLKDHFGJ;lkj
         player.update();
 
         if (Math.random() < 0.02) {
             addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
+
+
+
+
+        if (bulletTimer >= 60) {
+            bulletTimer = 0;
+        }
+
+        if (frameCount == 60) {
+            frameCount = 0;
+        }
+
+        frameCount++;
     }
 
-    private static class Player extends GameObject {
-        Player() {
-            super(new Rectangle(40, 20, Color.BLUE));
-        }
-    }
 
-    private static class Enemy extends GameObject {
-        Enemy() {
-            super(new Circle(15, 15, 15, Color.RED));
-        }
-    }
-
-    private static class Bullet extends GameObject {
-        Bullet() {
-            super(new Circle(5, 5, 5, Color.BROWN));
-        }
-    }
 
     @Override
     public void start(Stage stage) throws Exception {
+
         stage.setScene(new Scene(createContent()));
         stage.getScene().setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
