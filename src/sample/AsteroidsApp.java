@@ -7,6 +7,8 @@ import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -29,6 +31,7 @@ public class AsteroidsApp extends Application {
     private int frameCount = 0;
     private int bulletTimer = 0;
 
+    private static Image images[];
 
     private Parent createContent() {
         controllers = new ControllerManager();
@@ -37,11 +40,15 @@ public class AsteroidsApp extends Application {
 
 
         root = new Pane();
-        root.setPrefSize(600, 600);
+        root.setPrefSize(1720, 880);
 
-        player = new Player();
+
+
+        //player now requires a sprite
+        //all things will need sprite
+        player = new Player(new ImageView(images[0]));
         player.setVelocity(new Point2D(1, 0));
-        addGameObject(player, 300, 300);
+        addGameObject(player, root.getPrefWidth()/2, root.getPrefHeight()/2);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -93,19 +100,19 @@ public class AsteroidsApp extends Application {
         ControllerState currState = controllers.getState(0);
         if(currState.leftStickMagnitude > 0.25 || currState.leftStickMagnitude < -0.25)  {
             player.setVelocity(player.getVelocity().add(new Point2D(5*currState.leftStickX,5*(currState.leftStickY - (2* currState.leftStickY)))).multiply(.5));
-
+            player.setRotate(180 -currState.leftStickAngle);
         } else {
             player.setVelocity(player.getVelocity().add(new Point2D(0,0)).multiply(.5));
             //letting go of stick, do momentum calculatio
         }
 
         if(currState.rightStickMagnitude > 0.25) {
-            player.setRotate(180 -currState.rightStickAngle);
 
-            if(bulletTimer == 0 || bulletTimer == 5 || bulletTimer == 10 || bulletTimer == 30 || bulletTimer == 35 || bulletTimer == 40) {
+
+            if(bulletTimer % 10 == 0 ) {
                 Bullet bullet = new Bullet();
                 addBullet(bullet, player.getView().getTranslateX() + 15, player.getView().getTranslateY() + 5);
-                bullet.setVelocity((new Point2D(currState.rightStickX, currState.rightStickY - 2*(currState.rightStickY))).normalize().multiply(8));
+                bullet.setVelocity((new Point2D(currState.rightStickX, currState.rightStickY - 2*(currState.rightStickY))).normalize().multiply(10));
 
             }
             bulletTimer++;
@@ -118,9 +125,6 @@ public class AsteroidsApp extends Application {
         if (Math.random() < 0.02) {
             addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
-
-
-
 
         if (bulletTimer >= 60) {
             bulletTimer = 0;
@@ -154,6 +158,9 @@ public class AsteroidsApp extends Application {
     }
 
     public static void main(String[] args) {
+        images = new Image[10];
+        images[0] = new Image("Calculus Conflict Art Assets/ship.png");
+
         launch(args);
     }
 }
