@@ -3,9 +3,7 @@ package sample;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 
-/**
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
+
 public class GameObject {
 
     private Node view;
