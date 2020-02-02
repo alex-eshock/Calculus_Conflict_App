@@ -1,6 +1,6 @@
 package sample;
 
-import javafx.scene.image.ImageView;
+        import javafx.scene.image.ImageView;
 
 public class Player extends GameObject {
     Player(ImageView sprite) {
