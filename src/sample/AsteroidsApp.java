@@ -103,11 +103,14 @@ public class AsteroidsApp extends Application {
 
         //asdfasdfasdfasdfasdfasdf
         ControllerState currState = controllers.getState(0);
+        Point2D pVelocity = player.getVelocity();
+        Point2D stickPosition = new Point2D(5*currState.leftStickX,5*(-currState.leftStickY));
         if(currState.leftStickMagnitude > 0.25 || currState.leftStickMagnitude < -0.25)  {
-            player.setVelocity(player.getVelocity().add(new Point2D(5*currState.leftStickX,5*(currState.leftStickY - (2* currState.leftStickY)))).multiply(.5));
+
+            player.setVelocity(pVelocity.multiply(19).add(stickPosition).multiply(.05));
             player.setRotate(180 -currState.leftStickAngle);
         } else {
-            player.setVelocity(player.getVelocity().add(new Point2D(0,0)).multiply(.5));
+            player.setVelocity(pVelocity.multiply(19).add(new Point2D(0,0)).multiply(.05));
             //letting go of stick, do momentum calculatio
         }
 
