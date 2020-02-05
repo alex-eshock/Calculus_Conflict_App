@@ -113,7 +113,7 @@ public class AsteroidsApp extends Application {
 
         if(currState.rightStickMagnitude > 0.25) {
 
-
+            //change to cooldown timer
             if(bulletTimer % 20 == 0 ) {
                 Bullet bullet = new Bullet(new ImageView(images[2]));
                 bullet.setRotate(90 - currState.rightStickAngle);
