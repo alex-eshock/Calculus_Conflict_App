@@ -12,13 +12,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,12 +100,14 @@ public class AsteroidsApp extends Application {
 
         //asdfasdfasdfasdfasdfasdf
         ControllerState currState = controllers.getState(0);
+        Point2D pVelocity = player.getVelocity();
+        Point2D destVector = new Point2D(currState.leftStickX *5, -currState.leftStickY * 5);
         if(currState.leftStickMagnitude > 0.25 || currState.leftStickMagnitude < -0.25)  {
-            player.setVelocity(player.getVelocity().add(new Point2D(5*currState.leftStickX,5*(currState.leftStickY - (2* currState.leftStickY)))).multiply(.5));
-            player.setRotate(180 -currState.leftStickAngle);
+            player.setVelocity(pVelocity.multiply(14).add(destVector).multiply(0.066));
+            player.setRotate(180 - currState.rightStickAngle);
         } else {
-            player.setVelocity(player.getVelocity().add(new Point2D(0,0)).multiply(.5));
-            //letting go of stick, do momentum calculatio
+            player.setVelocity(pVelocity.multiply(14).add(Point2D.ZERO).multiply(0.066));
+
         }
 
         if(currState.rightStickMagnitude > 0.25) {
