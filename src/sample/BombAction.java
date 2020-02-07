@@ -11,21 +11,22 @@ public class BombAction extends Action implements KeyListener {
     boolean state = false;
     Point2D vec = Point2D.ZERO;
     ControllerManager controller;
+    int controllerIndex;
 
-    BombAction(ControllerManager controller) {
+    BombAction(ControllerManager controller, int controllerIndex) {
         this.controller = controller;
     }
 
     @Override
     Point2D statePoint2D() {
-        ControllerState currState = controller.getState(0);
+        ControllerState currState = controller.getState(controllerIndex);
         vec = new Point2D(currState.rightStickX, currState.rightStickY);
         return vec;
     }
 
     @Override
     boolean state() {
-        if(controller.getState(0).leftTrigger > 0.5 || controller.getState(0).rightTrigger > 0.5 ) {
+        if(controller.getState(0).leftTrigger > 0.3 || controller.getState(0).rightTrigger > 0.3 ) {
             state = true;
         }
         return state;
